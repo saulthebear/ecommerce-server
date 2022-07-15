@@ -11,7 +11,7 @@ tmp/**/*
 yarn-error.log
 
 # config
-**/*/config
+serviceAccountKey.json
 .env
 .env.local
 .env.development.local
