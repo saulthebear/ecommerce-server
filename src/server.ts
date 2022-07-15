@@ -14,6 +14,9 @@ const app: Express = express();
 // const isProduction = process.env.NODE_ENV === 'production';
 
 // Connect to Firebase Admin
+// TODO: Remove this line for production
+// firebaseAdmin.initializeApp({ projectId: 'ecommerce-ce7c0' });
+// TODO: Uncomment this line for production
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(serviceAccount as ServiceAccount),
 });
@@ -31,11 +34,11 @@ mongoose
 // Logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   logging.info(
-    `METHOD: ${req.method} - URL: ${req.url} - IP: ${req.socket.remoteAddress}`
+    `[START] METHOD: ${req.method} - URL: ${req.url} - IP: ${req.socket.remoteAddress}`
   );
   res.on('finish', () => {
     logging.info(
-      `METHOD: ${req.method} - URL: ${req.url} - IP: ${req.socket.remoteAddress} - STATUS: ${res.statusCode}`
+      `[FINISH] METHOD: ${req.method} - URL: ${req.url} - IP: ${req.socket.remoteAddress} - STATUS: ${res.statusCode}`
     );
   });
   next();

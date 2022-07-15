@@ -1,11 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import logging from '../config/logging';
 import User from '../models/user';
 
-const validate = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info('Token validated, returning user...');
-
+const validate = async (req: Request, res: Response) => {
   const firebase = res.locals.firebase;
   try {
     const user = await User.findOne({ uid: firebase.uid });
@@ -16,6 +14,7 @@ const validate = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
+    logging.info('Token validated, returning user...');
     return res.status(200).json({ user });
   } catch (error) {
     logging.error(error);
@@ -24,7 +23,7 @@ const validate = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-const create = async (req: Request, res: Response, next: NextFunction) => {
+const create = async (req: Request, res: Response) => {
   logging.info('Attempting to create user');
   try {
     const { uid, name } = req.body;
@@ -46,8 +45,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response) => {
   logging.info('Attempting to login or register user');
+  logging.info('Request body:', req.body);
   try {
     const { uid } = req.body;
 
@@ -56,7 +56,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     // User not found, create new user
     if (!user) {
       logging.info(`User not found, creating new user: ${uid}`);
-      return create(req, res, next);
+      return create(req, res);
     }
 
     // User found, return user
@@ -69,7 +69,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-const read = async (req: Request, res: Response, next: NextFunction) => {
+const read = async (req: Request, res: Response) => {
   const _id = req.params.id;
   logging.info(`Attempting to read user: ${_id}`);
   try {
@@ -89,7 +89,7 @@ const read = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-const readAll = async (req: Request, res: Response, next: NextFunction) => {
+const readAll = async (req: Request, res: Response) => {
   logging.info(`Attempting to read all users`);
   try {
     const users = await User.find({});

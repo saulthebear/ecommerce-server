@@ -36,7 +36,7 @@ const extractFirebaseInfo = (
       }
     })
     .catch((error) => {
-      logging.error(error);
+      logging.error('Token invalid - unauthorized', error);
       return res.status(401).send({
         message: 'Unauthorized',
       });
