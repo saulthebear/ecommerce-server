@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import firebaseAdmin, { ServiceAccount } from 'firebase-admin';
 import * as serviceAccount from './config/serviceAccountKey.json';
 import userRoutes from './routes/user';
+import productRoutes from './routes/product';
 
 dotenv.config();
 
@@ -68,6 +69,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Routes
 app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 app.get('/', (req: Request, res: Response) =>
   res.json({ message: 'Hello World! Express + TypeScript' })
 );
@@ -83,6 +85,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Listen for requests
 app.listen(config.server.port, () =>
   logging.info(
-    `⚡️ [server]: Started at ${config.server.host}:${config.server.port}`
+    `⚡️ Server listening at ${config.server.host}:${config.server.port}`
   )
 );
