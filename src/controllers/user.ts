@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import logging from '../config/logging';
 import User from '../models/user';
+import { ICart } from '../interfaces/user';
 
 const validate = async (req: Request, res: Response) => {
   const firebase = res.locals.firebase;
@@ -26,12 +27,16 @@ const validate = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   logging.info('Attempting to create user');
   try {
-    const { uid, name } = req.body;
+    const { uid, name }: { uid: string; name: string } = req.body;
+    const emptyCart: ICart = {
+      items: [],
+    };
 
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       uid,
       name,
+      cart: emptyCart,
     });
 
     await user.save();
