@@ -10,16 +10,19 @@ import userRoutes from './routes/user';
 dotenv.config();
 
 const app: Express = express();
-// const PORT = parseInt(process.env.PORT || '8080');
-// const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
-// Connect to Firebase Admin
-// TODO: Remove this line for production
-// firebaseAdmin.initializeApp({ projectId: 'ecommerce-ce7c0' });
-// TODO: Uncomment this line for production
-firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(serviceAccount as ServiceAccount),
-});
+if (isProduction) {
+  // Connect to Firebase Admin
+  firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(serviceAccount as ServiceAccount),
+  });
+} else {
+  // Connect to Firebase Admin Emulator
+  process.env.FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099';
+  process.env.GCLOUD_PROJECT = 'ecommerce-ce7c0';
+  firebaseAdmin.initializeApp({ projectId: 'ecommerce-ce7c0' });
+}
 
 // Connect to MongoDB
 mongoose
