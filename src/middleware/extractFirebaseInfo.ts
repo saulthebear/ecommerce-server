@@ -2,7 +2,7 @@ import logging from '../config/logging';
 import firebaseAdmin from 'firebase-admin';
 import { Request, Response, NextFunction } from 'express';
 
-const extractFirebaseInfo = (
+const extractFirebaseInfo = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -19,28 +19,26 @@ const extractFirebaseInfo = (
     });
   }
 
-  firebaseAdmin
-    .auth()
-    .verifyIdToken(token)
-    .then((decodedToken) => {
-      if (decodedToken) {
-        logging.info('Token verified');
-        res.locals.firebase = decodedToken;
-        res.locals.fire_token = token;
-        next();
-      } else {
-        logging.warn('Token invalid - unauthorized');
-        return res.status(401).send({
-          message: 'Unauthorized',
-        });
-      }
-    })
-    .catch((error) => {
-      logging.error('Token invalid - unauthorized', error);
-      return res.status(401).send({
+  try {
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+
+    if (decodedToken) {
+      logging.info('Token verified');
+      res.locals.firebase = decodedToken;
+      res.locals.fire_token = token;
+      next();
+    } else {
+      logging.warn('Token invalid - unauthorized');
+      return res.status(401).json({
         message: 'Unauthorized',
       });
+    }
+  } catch (error) {
+    logging.error('Token invalid - unauthorized', error);
+    return res.status(401).json({
+      message: 'Unauthorized',
     });
+  }
 };
 
 export default extractFirebaseInfo;
