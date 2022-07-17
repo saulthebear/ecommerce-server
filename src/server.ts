@@ -8,6 +8,7 @@ import * as serviceAccount from './config/serviceAccountKey.json';
 import userRoutes from './routes/user';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
+import categoryRoutes from './routes/category';
 
 dotenv.config();
 
@@ -72,6 +73,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/categories', categoryRoutes);
 app.get('/', (req: Request, res: Response) =>
   res.json({ message: 'Hello World! Express + TypeScript' })
 );
