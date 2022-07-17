@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import IUser, { ICart } from '../interfaces/user';
+import IUser, { ICart, UserRoles } from '../interfaces/user';
 
 const CartSchema = new Schema<ICart>({
   items: [
@@ -22,6 +22,11 @@ const UserSchema = new Schema<IUser>({
   uid: { type: String, unique: true },
   name: { type: String },
   cart: CartSchema,
+  role: {
+    type: String,
+    default: UserRoles.CUSTOMER,
+    required: true,
+  },
 });
 
 export default model<IUser>('User', UserSchema);
