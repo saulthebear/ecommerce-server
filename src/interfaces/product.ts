@@ -13,7 +13,7 @@ export interface IProduct {
   price: number;
   description: string;
   image_url: string;
-  category: string;
+  category: Types.ObjectId;
   reviews: Types.DocumentArray<IReviewDocument>;
 }
 export default interface IProductDocument extends IProduct, Document {}

@@ -31,8 +31,9 @@ const ProductSchema = new Schema<IProduct>(
       type: String,
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Category',
     },
     reviews: [ReviewSchema],
   },

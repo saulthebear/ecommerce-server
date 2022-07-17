@@ -1,7 +1,7 @@
-import { Date, Document } from 'mongoose';
+import { Date, Document, Types } from 'mongoose';
 
 export interface IOrderProduct extends Document {
-  productId: string;
+  productId: Types.ObjectId;
   quantity: number;
   price: number;
 }
@@ -12,7 +12,7 @@ export interface IPayment extends Document {
 }
 
 export default interface IOrder extends Document {
-  userId: string;
+  userId: Types.ObjectId;
   products: IOrderProduct[];
   payment: IPayment;
 }
