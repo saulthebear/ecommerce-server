@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import logging from '../config/logging';
+import { UserRoles } from '../interfaces/user';
 import Order from '../models/order';
 
 // Create an order
 const create = async (req: Request, res: Response) => {
   try {
-    const { userId, products, payment } = req.body;
+    const { products, payment } = req.body;
+    const userId = res.locals.user.id;
     const order = await Order.create({ userId, products, payment });
 
     logging.info(`New order created with id: ${order.id}`);
@@ -47,6 +49,14 @@ const read = async (req: Request, res: Response) => {
       });
     }
 
+    // Require admin or order owner
+    const userIsAdmin = res.locals.user.role === UserRoles.ADMIN;
+    if (order.userId != res.locals.user.id && !userIsAdmin) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      });
+    }
+
     res.status(200).json({ order });
   } catch (error) {
     logging.error('Error getting order', error);
@@ -61,15 +71,27 @@ const update = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
 
-    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    // const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {
+    //   new: true,
+    // });
 
-    if (!updatedOrder) {
+    const order = await Order.findById(id);
+
+    if (!order) {
       return res.status(404).json({
         message: 'Order not found',
       });
     }
+
+    // Require admin or order owner
+    const userIsAdmin = res.locals.user.role === UserRoles.ADMIN;
+    if (order.userId != res.locals.user.id && !userIsAdmin) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      });
+    }
+
+    const updatedOrder = await order.update(req.body, { new: true });
 
     res.status(200).json({ updatedOrder });
   } catch (error) {
