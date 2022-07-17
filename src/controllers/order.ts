@@ -91,9 +91,11 @@ const update = async (req: Request, res: Response) => {
       });
     }
 
-    const updatedOrder = await order.update(req.body, { new: true });
+    order.products = req.body.products;
+    order.payment = req.body.payment;
+    await order.save();
 
-    res.status(200).json({ updatedOrder });
+    res.status(200).json({ order });
   } catch (error) {
     logging.error('Error updating order', error);
     return res.status(500).json({
