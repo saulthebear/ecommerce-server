@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import IOrder, { IOrderProduct, IPayment } from '../interfaces/order';
 
 const orderProductSchema = new Schema<IOrderProduct>({
@@ -14,6 +14,7 @@ const paymentSchema = new Schema<IPayment>({
 
 const orderSchema = new Schema<IOrder>(
   {
+    userId: Types.ObjectId,
     products: [orderProductSchema],
     payment: paymentSchema,
   },
