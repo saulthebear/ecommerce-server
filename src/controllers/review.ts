@@ -17,8 +17,8 @@ const create = async (req: Request, res: Response) => {
       });
     }
 
-    const { userId, rating, comment } = req.body;
-
+    const { rating, comment } = req.body;
+    const userId = res.locals.user.id;
     const review: IReview = {
       userId,
       rating,
@@ -60,7 +60,13 @@ const update = async (req: Request, res: Response) => {
       });
     }
 
-    review.userId = req.body.userId;
+    // Check if user updating review is the owner of the review
+    if (review.userId != res.locals.user.id) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      });
+    }
+
     review.rating = req.body.rating;
     review.comment = req.body.comment;
 
@@ -94,6 +100,13 @@ const destroy = async (req: Request, res: Response) => {
       logging.info("Review not found. Can't delete review");
       return res.status(404).json({
         message: 'Review not found',
+      });
+    }
+
+    // Check if user updating review is the owner of the review
+    if (review.userId != res.locals.user.id) {
+      return res.status(401).json({
+        message: 'Unauthorized',
       });
     }
 
