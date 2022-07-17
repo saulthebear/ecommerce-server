@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import IOrder, { IOrderProduct, IPayment } from '../interfaces/order';
 
 const orderProductSchema = new Schema<IOrderProduct>({
+  productId: String,
   quantity: Number,
   price: Number,
 });

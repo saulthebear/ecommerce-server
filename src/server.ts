@@ -7,6 +7,7 @@ import firebaseAdmin, { ServiceAccount } from 'firebase-admin';
 import * as serviceAccount from './config/serviceAccountKey.json';
 import userRoutes from './routes/user';
 import productRoutes from './routes/product';
+import orderRoutes from './routes/order';
 
 dotenv.config();
 
@@ -70,6 +71,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // Routes
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
 app.get('/', (req: Request, res: Response) =>
   res.json({ message: 'Hello World! Express + TypeScript' })
 );
