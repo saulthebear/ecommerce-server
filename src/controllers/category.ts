@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { MongooseError } from 'mongoose';
 import logging from '../config/logging';
 import Category from '../models/category';
 
@@ -18,10 +18,28 @@ const create = async (req: Request, res: Response) => {
     logging.info(`New category created: ${category.title}`);
     return res.status(201).json({ category });
   } catch (error) {
-    logging.error('Error creating category', error);
-    return res.status(500).json({
-      error,
-    });
+    logging.error(`Error creating category: ${error}`);
+    if (error instanceof mongoose.Error) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        logging.error(`Validation error: ${error.message}`);
+        const validationErrors = Object.keys(error.errors).map(
+          (key) => error.errors[key].message
+        );
+        return res.status(400).json({
+          type: 'Validation error',
+          errors: validationErrors,
+        });
+      }
+
+      return res.status(500).json({
+        type: 'Database Error',
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        error,
+      });
+    }
   }
 };
 const read = async (req: Request, res: Response) => {
