@@ -95,10 +95,25 @@ const destroy = async (req: Request, res: Response) => {
   }
 };
 
+const readByCategory = async (req: Request, res: Response) => {
+  const categoryId = req.params.categoryId;
+  logging.info(`Attempting to read products by category: ${categoryId}`);
+  try {
+    const products = await Product.find({ category: categoryId });
+    return res.status(200).json({ count: products.length, products });
+  } catch (error) {
+    logging.error('Error reading products by category', error);
+    return res.status(500).json({
+      error,
+    });
+  }
+};
+
 export default {
   create,
   read,
   readAll,
+  readByCategory,
   update,
   destroy,
 };

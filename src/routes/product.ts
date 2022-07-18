@@ -11,6 +11,8 @@ router.post('/', requireAdmin, productController.create);
 router.put('/:id', requireAdmin, productController.update);
 router.delete('/:id', requireAdmin, productController.destroy);
 
+router.get('/category/:categoryId', productController.readByCategory);
+
 router.post('/:productId/reviews', requireLogin, reviewController.create);
 router.put(
   '/:productId/reviews/:reviewId',
