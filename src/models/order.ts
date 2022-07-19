@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import IOrder, { IOrderProduct } from '../interfaces/order';
 
 const orderProductSchema = new Schema<IOrderProduct>({
-  productId: {
+  product: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Product',

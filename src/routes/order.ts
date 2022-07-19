@@ -7,6 +7,7 @@ const router = express.Router();
 // router.post('/', requireLogin, orderController.create);
 router.get('/', requireAdmin, orderController.readAll);
 router.get('/:id', requireLogin, orderController.read);
+router.get('/user/:userId', requireLogin, orderController.readUserOrders);
 // router.put('/:id', requireLogin, orderController.update);
 router.delete('/:id', requireAdmin, orderController.destroy);
 

@@ -58,7 +58,7 @@ const create_checkout_session = async (req: Request, res: Response) => {
       userId: res.locals.user.id,
       products: products.map((item) => {
         return {
-          productId: item.product._id,
+          product: item.product._id,
           quantity: item.quantity,
           price: item.product.price,
         };

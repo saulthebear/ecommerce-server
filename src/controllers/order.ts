@@ -37,6 +37,31 @@ const readAll = async (req: Request, res: Response) => {
   }
 };
 
+const readUserOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+
+    // Require admin or order owner
+    const userIsAdmin = res.locals.user.role === UserRoles.ADMIN;
+    if (userId != res.locals.user.id && !userIsAdmin) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      });
+    }
+
+    const orders = await Order.find({ userId }).populate('products');
+    return res.status(200).json({
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    logging.error('Error getting orders', error);
+    return res.status(500).json({
+      error,
+    });
+  }
+};
+
 // Get one order
 const read = async (req: Request, res: Response) => {
   try {
@@ -134,4 +159,5 @@ export default {
   read,
   // update,
   destroy,
+  readUserOrders,
 };

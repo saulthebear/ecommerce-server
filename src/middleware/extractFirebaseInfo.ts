@@ -1,5 +1,5 @@
 import logging from '../config/logging';
-import firebaseAdmin from 'firebase-admin';
+import firebaseAdmin, { FirebaseError } from 'firebase-admin';
 import { Request, Response, NextFunction } from 'express';
 
 const extractFirebaseInfo = async (
@@ -34,6 +34,12 @@ const extractFirebaseInfo = async (
       });
     }
   } catch (error) {
+    if (error?.errorInfo?.code === 'auth/id-token-expired') {
+      logging.warn('Token expired');
+      return res.status(401).json({
+        message: 'Token expired',
+      });
+    }
     logging.error('Token invalid - unauthorized', error);
     return res.status(401).json({
       message: 'Unauthorized',
