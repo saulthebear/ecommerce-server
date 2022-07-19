@@ -4,7 +4,7 @@ import IUser, { ICart, UserRoles } from '../interfaces/user';
 const CartSchema = new Schema<ICart>({
   items: [
     {
-      productId: {
+      product: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Product',

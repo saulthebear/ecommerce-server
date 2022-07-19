@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import firebaseAdmin, { ServiceAccount } from 'firebase-admin';
 import * as serviceAccount from './config/serviceAccountKey.json';
 import userRoutes from './routes/user';
+import cartRoutes from './routes/cart';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
 import categoryRoutes from './routes/category';
@@ -71,6 +72,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Routes
 app.use('/users', userRoutes);
+app.use('/cart', cartRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/categories', categoryRoutes);

@@ -5,7 +5,7 @@ export enum UserRoles {
   CUSTOMER = 'CUSTOMER',
 }
 export interface ICartItem {
-  productId: string;
+  product: string;
   quantity: number;
 }
 

@@ -7,7 +7,9 @@ import { ICart } from '../interfaces/user';
 const validate = async (req: Request, res: Response) => {
   const firebase = res.locals.firebase;
   try {
-    const user = await User.findOne({ uid: firebase.uid });
+    const user = await User.findOne({ uid: firebase.uid }).populate(
+      'cart.items.product'
+    );
 
     if (!user) {
       return res.status(401).json({
@@ -56,7 +58,7 @@ const login = async (req: Request, res: Response) => {
   try {
     const { uid } = req.body;
 
-    const user = await User.findOne({ uid });
+    const user = await User.findOne({ uid }).populate('cart.items.product');
 
     // User not found, create new user
     if (!user) {
@@ -78,7 +80,7 @@ const read = async (req: Request, res: Response) => {
   const _id = req.params.id;
   logging.info(`Attempting to read user: ${_id}`);
   try {
-    const user = await User.findById(_id);
+    const user = await User.findById(_id).populate('cart.items.product');
 
     if (!user) {
       return res.status(404).json({
