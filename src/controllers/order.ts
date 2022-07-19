@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import logging from '../config/logging';
 import { UserRoles } from '../interfaces/user';
 import Order from '../models/order';
+import { getSession } from './checkout';
 
 // Create an order
 // const create = async (req: Request, res: Response) => {
@@ -57,7 +58,10 @@ const read = async (req: Request, res: Response) => {
       });
     }
 
-    res.status(200).json({ order });
+    // Get stripe session
+    const session = await getSession(order.stripeSessionId);
+
+    res.status(200).json({ order, session });
   } catch (error) {
     logging.error('Error getting order', error);
     return res.status(500).json({

@@ -76,6 +76,16 @@ const create_checkout_session = async (req: Request, res: Response) => {
   }
 };
 
+export const getSession = async (sessionId: string) => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return session;
+  } catch (error) {
+    logging.error('Error reading checkout session', error);
+    return null;
+  }
+};
+
 const read_session = async (req: Request, res: Response) => {
   try {
     const { sessionId } = req.query;
@@ -86,7 +96,7 @@ const read_session = async (req: Request, res: Response) => {
       });
     }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await getSession(sessionId);
     res.status(200).json({ session });
   } catch (error) {
     logging.error('Error reading checkout session', error);
