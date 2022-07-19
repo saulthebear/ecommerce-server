@@ -10,6 +10,7 @@ import cartRoutes from './routes/cart';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
 import categoryRoutes from './routes/category';
+import checkoutRoutes from './routes/checkout';
 
 dotenv.config();
 
@@ -76,6 +77,7 @@ app.use('/cart', cartRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/checkout', checkoutRoutes);
 app.get('/', (req: Request, res: Response) =>
   res.json({ message: 'Hello World! Express + TypeScript' })
 );
