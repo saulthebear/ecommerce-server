@@ -4,7 +4,11 @@ import { requireLogin, requireAdmin } from '../middleware/requireAuth';
 
 const router = express.Router();
 
-router.post('/create-session', checkoutController.create_checkout_session);
-router.get('/session', checkoutController.read_session);
+router.post(
+  '/create-session',
+  requireLogin,
+  checkoutController.create_checkout_session
+);
+router.get('/session', requireAdmin, checkoutController.read_session);
 
 export default router;

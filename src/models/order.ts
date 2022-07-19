@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import IOrder, { IOrderProduct, IPayment } from '../interfaces/order';
+import IOrder, { IOrderProduct } from '../interfaces/order';
 
 const orderProductSchema = new Schema<IOrderProduct>({
   productId: {
@@ -11,10 +11,10 @@ const orderProductSchema = new Schema<IOrderProduct>({
   price: Number,
 });
 
-const paymentSchema = new Schema<IPayment>({
-  amount: Number,
-  date: Date,
-});
+// const paymentSchema = new Schema<IPayment>({
+//   amount: Number,
+//   date: Date,
+// });
 
 const orderSchema = new Schema<IOrder>(
   {
@@ -24,7 +24,8 @@ const orderSchema = new Schema<IOrder>(
       ref: 'User',
     },
     products: [orderProductSchema],
-    payment: paymentSchema,
+    stripeSessionId: String,
+    // payment: paymentSchema,
   },
   { timestamps: true }
 );

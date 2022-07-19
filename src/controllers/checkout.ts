@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import config from '../config/config';
 import { ICartItem } from '../interfaces/user';
 import Product from '../models/product';
+import Order from '../models/order';
 
 const stripe = new Stripe(config.stripe.secret_key, {
   apiVersion: '2020-08-27',
@@ -48,11 +49,23 @@ const create_checkout_session = async (req: Request, res: Response) => {
     const session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
-      success_url: `${config.client.url}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${config.client.url}/checkout/success`,
       cancel_url: `${config.client.url}/checkout/cancel`,
     });
 
     // Create order in database, with session id
+    const order = new Order({
+      userId: res.locals.user.id,
+      products: products.map((item) => {
+        return {
+          productId: item.product._id,
+          quantity: item.quantity,
+          price: item.product.price,
+        };
+      }),
+      stripeSessionId: session.id,
+    });
+    await order.save();
 
     res.status(200).json({ session });
   } catch (error) {
