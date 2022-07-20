@@ -24,7 +24,7 @@ import { getSession } from './checkout';
 // Get all orders
 const readAll = async (req: Request, res: Response) => {
   try {
-    const orders = await Order.find({});
+    const orders = await Order.find({}).populate('products.product');
     return res.status(200).json({
       count: orders.length,
       orders,
