@@ -49,7 +49,7 @@ const readUserOrders = async (req: Request, res: Response) => {
       });
     }
 
-    const orders = await Order.find({ userId }).populate('products');
+    const orders = await Order.find({ userId }).populate('products.product');
     return res.status(200).json({
       count: orders.length,
       orders,
@@ -67,7 +67,7 @@ const read = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
 
-    const order = await Order.findById(id);
+    const order = await Order.findById(id).populate('products.product');
 
     if (!order) {
       return res.status(404).json({
