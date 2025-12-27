@@ -20,3 +20,5 @@ serviceAccountKey.json
 
 # misc
 .DS_Store
+# Firebase service account keys
+*-firebase-adminsdk-*.json

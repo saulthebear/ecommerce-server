@@ -4,16 +4,16 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
 # Install ALL dependencies (including dev dependencies for build)
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build TypeScript to JavaScript (outputs to dist/)
-RUN npm run build
+RUN yarn build
 
 # Production stage
 FROM node:20-alpine
@@ -21,10 +21,10 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
 # Install only production dependencies
-RUN npm ci --omit=dev
+RUN yarn install --frozen-lockfile --production
 
 # Copy compiled JavaScript from builder
 COPY --from=builder /app/dist ./dist
