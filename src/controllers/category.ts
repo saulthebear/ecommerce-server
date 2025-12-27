@@ -22,8 +22,9 @@ const create = async (req: Request, res: Response) => {
     if (error instanceof mongoose.Error) {
       if (error instanceof mongoose.Error.ValidationError) {
         logging.error(`Validation error: ${error.message}`);
-        const validationErrors = Object.keys(error.errors).map(
-          (key) => (error.errors[key] as mongoose.Error.ValidatorError).message
+        const errors = error.errors as Record<string, mongoose.Error.ValidatorError>;
+        const validationErrors = Object.keys(errors).map(
+          (key) => errors[key].message
         );
         return res.status(400).json({
           type: 'Validation error',
