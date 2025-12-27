@@ -34,7 +34,7 @@ const extractFirebaseInfo = async (
       });
     }
   } catch (error) {
-    if (error?.errorInfo?.code === 'auth/id-token-expired') {
+    if ((error as any)?.errorInfo?.code === 'auth/id-token-expired') {
       logging.warn('Token expired');
       return res.status(401).json({
         message: 'Token expired',
